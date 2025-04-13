@@ -1,0 +1,13 @@
+#- name: prerequisites for Multimaster kubernetes cluster
+  #  hosts: kubernetes
+    #  become: true
+    #  roles:
+    #  - role: common
+    #    state: present
+
+- name: Initialize for Multimaster kubernetes cluster
+  hosts: masters
+  become: true
+  roles:
+    - role: master
+      state: present

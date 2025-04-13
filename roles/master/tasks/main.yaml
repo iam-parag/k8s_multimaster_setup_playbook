@@ -1,0 +1,5 @@
+- include_tasks: init.yaml
+  when: inventory_hostname == 'master1'
+
+- include_tasks: multimaster.yaml
+  when: inventory_hostname == 'master2' or inventory_hostname == 'master3'

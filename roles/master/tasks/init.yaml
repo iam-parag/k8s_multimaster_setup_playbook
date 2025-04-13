@@ -1,0 +1,76 @@
+---
+- name: Get the host IP address
+  set_fact:
+    host_ip: "{{ ansible_host }}"
+
+- name: kubeadm -init’ on only one node to generate certificates.
+  command: kubeadm init --control-plane-endpoint "{{ host_ip }}:6443" --upload-certs
+
+- name: create .kube directory
+  file:
+    path: /root/.kube
+    state: directory
+    mode: 0755
+
+- name: fetch admin.conf file
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: /tmp/kubeconfig
+    flat: yes
+
+- name: copies admin.conf to user's kube config
+  copy:
+    src: /tmp/kubeconfig
+    dest: /root/.kube/config
+
+- name: Wait for Kubernetes API to be ready
+  uri:
+    url: "https://{{ host_ip }}:6443/healthz"
+    method: GET
+    validate_certs: no
+    status_code: 200
+  register: api_check
+  until: api_check.status == 200
+  retries: 30
+  delay: 10
+  run_once: true
+
+- name: Apply Calico CNI plugin
+  command: kubectl apply -f https://raw.githubusercontent.com/projectcalico/calico/v3.27.2/manifests/calico.yaml
+
+- name: fetch admin.conf file
+  fetch:
+    src: /etc/kubernetes/admin.conf
+    dest: /tmp/kubernetes/
+    flat: yes
+
+- name: fetch pki certificates
+  fetch:
+    src: /etc/kubernetes/pki/{{ item }}
+    dest: /tmp/kubernetes/pki/
+    flat: yes
+  loop:
+    - ca.crt
+    - ca.key
+    - front-proxy-ca.key
+    - front-proxy-ca.crt
+    - sa.key
+    - sa.pub
+
+- name: fetch etcd certificates
+  fetch:
+    src: /etc/kubernetes/pki/etcd/{{ item }}
+    dest: /tmp/kubernetes/pki/etcd/
+    flat: yes
+  loop:
+    - ca.crt
+    - ca.key
+
+- name: Get the token for joining the worker nodes
+  shell: kubeadm token create  --print-join-command
+  register: kubernetes_join_command
+
+- name: Copy join command to local file.
+  local_action: copy content="{{ kubernetes_join_command.stdout_lines[0] }} --control-plane" dest="/tmp/kubernetes_join_command" mode=0777
+
+
