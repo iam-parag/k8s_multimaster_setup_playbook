@@ -14,4 +14,13 @@
   command: sh /tmp/kubernetes_join_command
   register: joined_or_not
 
+- name: create .kube directory
+  file:
+    path: /root/.kube
+    state: directory
+    mode: 0755
 
+- name: copies admin.conf to user's kube config
+  copy:
+    src: /tmp/kubeconfig
+    dest: /root/.kube/config
