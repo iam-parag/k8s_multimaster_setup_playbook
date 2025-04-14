@@ -1,13 +1,20 @@
-#- name: prerequisites for Multimaster kubernetes cluster
-  #  hosts: kubernetes
-    #  become: true
-    #  roles:
-    #  - role: common
-    #    state: present
+- name: prerequisites for Multimaster kubernetes cluster
+  hosts: kubernetes
+  become: true
+  roles:
+    - role: common
+      state: present
 
 - name: Initialize for Multimaster kubernetes cluster
   hosts: masters
   become: true
   roles:
     - role: master
+      state: present
+
+- name: Add Worker node on  kubernetes cluster
+  hosts: workers
+  become: true
+  roles:
+    - role: worker
       state: present

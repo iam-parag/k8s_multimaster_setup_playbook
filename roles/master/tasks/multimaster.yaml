@@ -4,7 +4,7 @@
     src: /tmp/kubernetes
     dest: /etc/
 
-- name: Copy join command from Ansiblehost to the worker nodes.
+- name: Copy join command from Ansiblehost to the master nodes.
   copy:
     src: /tmp/kubernetes_join_command
     dest: /tmp/kubernetes_join_command
