@@ -2,17 +2,17 @@
 localhost ansible_connection=local
 
 [masters]
-master1 ansible_host=192.168.0.115
-master2 ansible_host=192.168.0.116
-master3 ansible_host=192.168.0.117
+master1 ansible_host=192.168.0.112
+master2 ansible_host=192.168.0.110
+master3 ansible_host=192.168.0.109
 
 [masters:vars]
-keepalived_virtual_ipaddress    ='10.51.0.4'
-kubernetes_service_cidr         ='10.21.0.0/17'
-kubernetes_pod_cidr             ='10.21.128.0/17'
+keepalived_virtual_ipaddress    ='192.168.0.112'
+#kubernetes_service_cidr         ='10.21.0.0/17'
+#kubernetes_pod_cidr             ='10.21.128.0/17'
 
 [workers]
-worker1 ansible_host=192.168.0.119
+worker1 ansible_host=192.168.0.111
 #worker2 ansible_host=192.168.0.119
 #worker3 ansible_host=10.51.0.8
 

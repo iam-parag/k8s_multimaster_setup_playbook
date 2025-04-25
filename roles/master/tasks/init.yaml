@@ -1,10 +1,11 @@
 ---
-- name: Get the host IP address
-  set_fact:
-    host_ip: "{{ ansible_host }}"
+- name: Copy Kubeadm config file
+  template:
+    src: config.yaml.j2
+    dest: /tmp/config.yaml
 
 - name: kubeadm -init’ on only one node to generate certificates.
-  command: kubeadm init --control-plane-endpoint "{{ host_ip }}:6443" --upload-certs
+  command: kubeadm init --config /tmp/config.yaml --upload-certs
 
 - name: create .kube directory
   file:
@@ -25,7 +26,7 @@
 
 - name: Wait for Kubernetes API to be ready
   uri:
-    url: "https://{{ host_ip }}:6443/healthz"
+    url: "https://{{ keepalived_virtual_ipaddress }}:6443/healthz"
     method: GET
     validate_certs: no
     status_code: 200

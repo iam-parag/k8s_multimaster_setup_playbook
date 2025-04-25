@@ -1,0 +1,7 @@
+---
+- name: Copy keepalived.conf for BACKUP server
+  vars:
+    keepalived_state: 'BACKUP'
+  template: 
+    src: keepalived.conf.j2 
+    dest: /etc/keepalived/keepalived.conf

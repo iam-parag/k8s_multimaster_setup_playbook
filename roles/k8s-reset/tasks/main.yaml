@@ -1,0 +1,9 @@
+- name: reset kubeadm
+  shell: kubeadm reset -f
+
+- name: restart kubelet
+  ansible.builtin.service:
+    name: kubelet
+    state: restarted
+
+

@@ -1,0 +1,5 @@
+keepalived_priority: "{{ '100' if keepalived_state == 'MASTER' else '99' }}"
+keepalived_state: 'MASTER'
+keepalived_interface: "{{ ansible_default_ipv4.interface }}"
+
+

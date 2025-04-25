@@ -4,6 +4,11 @@
   register: master1_init_result
   run_once: true
 
+- name: Check if master1 init failed
+  fail:
+    msg: "Master1 initialization failed. Exiting playbook."
+  when: master1_init_result is failed
+
 - name: Set fact after master1 init
   set_fact:
     master1_initialized: true
@@ -21,3 +26,13 @@
   include_tasks: multimaster.yaml
   when: inventory_hostname != 'master1' and hostvars['master1']['master1_initialized'] | default(false)
 
+- name: Copy Keepalived.conf for MASTER Nodes
+  template:
+    src: check_apiserver.sh.j2
+    dest: /etc/keepalived/check_apiserver.sh
+    mode: +x
+
+- name: restart keepalived
+  ansible.builtin.service:
+    name: keepalived
+    state: restarted

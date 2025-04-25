@@ -1,9 +1,19 @@
-- name: prerequisites for Multimaster kubernetes cluster
-  hosts: kubernetes
+#- name: prerequisites for Multimaster kubernetes cluster
+#  hosts: kubernetes
+#  become: true
+#  roles:
+#    - role: common
+#      state: present
+
+- name: Kubernetes installation
+  hosts: masters
   become: true
+  serial: 3
+  vars:
+    keepalived_virtual_ipaddress: '10.51.0.4'
   roles:
-    - role: common
-      state: present
+  - role: keepalived
+    state: present
 
 - name: Initialize for Multimaster kubernetes cluster
   hosts: masters

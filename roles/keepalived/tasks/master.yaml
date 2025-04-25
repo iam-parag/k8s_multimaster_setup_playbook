@@ -1,0 +1,7 @@
+---
+- name: Copy Keepalived.conf for MASTER Nodes
+  template: 
+    src: keepalived.conf.j2 
+    dest: /etc/keepalived/keepalived.conf
+
+

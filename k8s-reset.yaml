@@ -1,0 +1,9 @@
+---
+- name: reset kubeadm and restart kubelet
+  hosts: kubernetes
+  become: true
+  roles:
+  - role: k8s-reset
+    state: present
+
+
