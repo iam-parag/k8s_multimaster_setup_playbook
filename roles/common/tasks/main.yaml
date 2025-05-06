@@ -1,6 +1,6 @@
-- name: Update apt repository
-  apt:
-    update_cache: yes
+#- name: Update apt repository
+#  apt:
+#    update_cache: yes
 
 - name: Install containerd
   apt:

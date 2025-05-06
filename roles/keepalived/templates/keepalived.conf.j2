@@ -19,6 +19,9 @@ vrrp_instance VI_1 {
     unicast_src_ip {{ ansible_default_ipv4.address }}
     unicast_peer {
     {% for host in groups['masters']%}{% if  host  != inventory_hostname  %}{{hostvars[host]['ansible_default_ipv4']['address']}}{{'\n    '}}{% endif %}{% endfor %}}
+    virtual_ipaddress {
+       {{ keepalived_virtual_ipaddress }}
+    }
     track_script {
         check_apiserver
     }
